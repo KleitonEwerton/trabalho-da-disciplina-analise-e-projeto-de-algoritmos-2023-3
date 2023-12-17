@@ -47,10 +47,9 @@ def plotar_e_salvar_grafico(tempo, tamanho, titulo, nome_arquivo):
     plt.savefig(caminho_arquivo)
 
 
-tamanhos_array = [int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7)]
+tamanhos_array = [int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7), int(1e8), int(1e9)]
 porcentagens_troca = [5, 25, 45]
-metodos_pivo = [1, 2, 3, 4, 5]
-
+metodos_pivo = [1, 2, 3, 4, 6, 5]
 metodos_pivo_nome = ["Primeiro", "Central",
                      "Média", "Randômico", "Mediana", "Acha Pivo"]
 
@@ -70,19 +69,21 @@ if __name__ == "__main__":
 
                 # Embaralhando a lista aleatória
                 trocar_porcentagem(lista_aleatoria, porcentagem_troca)
-
+                
                 # Criando uma instância da classe QuickSort
                 quick_sort = QuickSort(lista_aleatoria.copy())
 
                 # Clonando a lista original para não modificar a original
                 lista_copia = lista_aleatoria.copy()
-
+                
                 # Ordenando a lista usando o método de escolha de pivô específico
                 quick_sort.ordenar(lista_copia, metodo_pivo)
-
+                
+                # Lista anterior
+                # print(lista_aleatoria)
                 # Exibindo o resultado
-                # print(
-                #     f"\nPivô {metodo_pivo}, tamanho_array {tamanho_array}, tempo {quick_sort.time}, {lista_copia}\n\n")
+                print(
+                       f"\nPivô '{metodos_pivo_nome[metodo_pivo-1]}', tamanho_array {tamanho_array}, tempo {quick_sort.time}\n\n")
 
                 tamanhos_na_iteracao.append(tamanho_array)
                 tempo_na_iteracao.append(quick_sort.time)

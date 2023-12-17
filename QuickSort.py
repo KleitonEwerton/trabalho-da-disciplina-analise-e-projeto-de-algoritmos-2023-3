@@ -37,69 +37,87 @@ class QuickSort:
 
         # 5 – Pivô mediana
         elif metodo_pivo == 5:
-            # Calcula a mediana da lista usando a função seleciona_mediana
-            mediana_index = self.seleciona_mediana(A,
-                                                   inicio, (inicio + fim) // 2, fim)
+            return self.median_of_medians(A, (inicio + fim) // 2)
+            
 
-            # Retorna o índice da mediana como pivô
-            return A[mediana_index]
+        elif metodo_pivo == 6:
+            return A[self.metodo_acha_pivout(A, inicio, fim)]
 
     def partition(self, A, start, end, metodo_pivo):
         i = start-1  # left pointer
+        
         pivot = self.seleciona_pivo(A, start, end, metodo_pivo)
-        j = end+1  # right pointer
+        
+        j = end + 1  # right pointer
         while True:
             i += 1
             while (A[i] < pivot):
                 i += 1  # move left pointer to right
             j -= 1
+            
             while (A[j] > pivot):
                 j -= 1  # move right pointer to left
+                
             if i >= j:
                 return j  # stop, pivot moved to its correct position
+            
             A[i], A[j] = A[j], A[i]
 
     # Function to perform quicksort
-
     def quick_sort(self, A, start, end, metodo_pivo):
         if start < end:
             # p is pivot, it is now at its correct position
             p = self.partition(A, start, end, metodo_pivo)
             # sort elements to left and right of pivot separately
-            self.quick_sort(A, start, p, metodo_pivo)
-            self.quick_sort(A, p+1, end, metodo_pivo)
+            if(metodo_pivo == 6):
+                self.quick_sort(A, start, p-1, metodo_pivo)  # Corrigido
+                self.quick_sort(A, p+1, end, metodo_pivo)
+            else:
+                self.quick_sort(A, start, p, metodo_pivo)  # Corrigido
+                self.quick_sort(A, p+1, end, metodo_pivo)
 
     def calcula_media(self, a, b, c):
         return (a + b + c) // 3
 
-    def seleciona_mediana(self, A, inicio, meio, fim):
-        a = A[inicio]
-        b = A[meio]
-        c = A[fim]
-        mediana_indice = None  # índice da mediana
-
-        # A sequência de if...else a seguir verifica qual é a mediana
-        if a < b:
-            if b < c:
-                # a < b && b < c
-                mediana_indice = meio
+    def metodo_acha_pivout(self, A, inicio, fim):
+        esquerda = inicio
+        direita = fim
+        
+        pos = esquerda + 1
+        pto = -1
+        
+        while True:
+            
+            if pos > direita:
+                break
             else:
-                if a < c:
-                    # a < c && c <= b
-                    mediana_indice = fim
+                if A[pos] >= A[pos-1]:
+                    pos += 1
                 else:
-                    # c <= a && a < b
-                    mediana_indice = inicio
+                    pto = pos
+                    break
+        
+        return pto
+
+    def median_of_medians(self, A, i):
+
+        #divide A into sublists of len 5
+        sublists = [A[j:j+5] for j in range(0, len(A), 5)]
+        medians = [sorted(sublist)[len(sublist)//2] for sublist in sublists]
+        if len(medians) <= 5:
+            pivot = sorted(medians)[len(medians)//2]
         else:
-            if c < b:
-                # c < b && b <= a
-                mediana_indice = meio
-            else:
-                if c < a:
-                    # b <= c && c < a
-                    mediana_indice = fim
-                else:
-                    # b <= a && a <= c
-                    mediana_indice = inicio
+            #the pivot is the median of the medians
+            pivot = self.median_of_medians(medians, len(medians)//2)
 
-        return mediana_indice
+        #partitioning step
+        low = [j for j in A if j < pivot]
+        high = [j for j in A if j > pivot]
+
+        k = len(low)
+        if i < k:
+            return self.median_of_medians(low,i)
+        elif i > k:
+            return self.median_of_medians(high,i-k-1)
+        else: #pivot = k
+            return pivot
