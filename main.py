@@ -46,8 +46,8 @@ def plotar_e_salvar_grafico(tempo, tamanho, titulo, nome_arquivo):
     plt.savefig(caminho_arquivo)
 
 tamanhos_array = [int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7), int(1e8)]
-porcentagens_troca = [5, 25, 45]
-metodos_pivo = [5]
+porcentagens_troca = [45, 25, 5]
+metodos_pivo = [1, 2, 3, 4, 6, 5]
 metodos_pivo_nome = ["Primeiro", "Central",
                      "Média", "Randômico", "Mediana", "Acha Pivo"]
 
