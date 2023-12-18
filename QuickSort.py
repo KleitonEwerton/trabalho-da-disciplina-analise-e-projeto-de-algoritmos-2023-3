@@ -9,7 +9,10 @@ class QuickSort:
     def ordenar(self, array, metodo_pivo):
         tempo_inicio = time.time()
 
-        self.quick_sort(array, 0, len(array) - 1, metodo_pivo)
+        if(metodo_pivo == 6):
+            self.quick_sort_acha_pivo(array, 0, len(array) - 1)
+        else:
+            self.quick_sort(array, 0, len(array) - 1, metodo_pivo)
 
         tempo_fim = time.time()
         self.time = tempo_fim - tempo_inicio
@@ -37,11 +40,29 @@ class QuickSort:
 
         # 5 – Pivô mediana
         elif metodo_pivo == 5:
-            return self.median_of_medians(A, (inicio + fim) // 2)
+            p  = self.median_of_medians(A, (inicio + fim) // 2)
+            return p
             
 
-        elif metodo_pivo == 6:
-            return A[self.metodo_acha_pivout(A, inicio, fim)]
+    # Function to perform quicksort
+    def quick_sort(self, A, start, end, metodo_pivo):
+        if start < end:
+            # p is pivot, it is now at its correct position
+            p = self.partition(A, start, end, metodo_pivo)
+            self.quick_sort(A, start, p, metodo_pivo)  # Corrigido
+            self.quick_sort(A, p+1, end, metodo_pivo)
+
+    def quick_sort_acha_pivo(self,L, n1, n2):
+        esq = n1
+        dir = n2
+        
+        pto = self.achaPivo(n1, n2, L)
+        
+        if pto != 0:
+            p = self.particao_acha_pivo(L, n1, n2, L[pto], pto)
+            self.quick_sort_acha_pivo(L, esq, p) 
+            self.quick_sort_acha_pivo(L, p + 1, dir)
+
 
     def partition(self, A, start, end, metodo_pivo):
         i = start-1  # left pointer
@@ -62,62 +83,73 @@ class QuickSort:
                 return j  # stop, pivot moved to its correct position
             
             A[i], A[j] = A[j], A[i]
-
-    # Function to perform quicksort
-    def quick_sort(self, A, start, end, metodo_pivo):
-        if start < end:
-            # p is pivot, it is now at its correct position
-            p = self.partition(A, start, end, metodo_pivo)
-            # sort elements to left and right of pivot separately
-            if(metodo_pivo == 6):
-                self.quick_sort(A, start, p-1, metodo_pivo)  # Corrigido
-                self.quick_sort(A, p+1, end, metodo_pivo)
-            else:
-                self.quick_sort(A, start, p, metodo_pivo)  # Corrigido
-                self.quick_sort(A, p+1, end, metodo_pivo)
-
-    def calcula_media(self, a, b, c):
-        return (a + b + c) // 3
-
-    def metodo_acha_pivout(self, A, inicio, fim):
-        esquerda = inicio
-        direita = fim
-        
-        pos = esquerda + 1
-        pto = -1
+    
+    def particao_acha_pivo(self, L, n1, n2, pivo, p):
+        esq = n1
+        dir = n2
         
         while True:
+            while L[esq] < pivo:
+                esq = esq + 1
+            while L[dir] > pivo:
+                dir = dir - 1
             
-            if pos > direita:
+            if esq >= dir:
+                return dir  # Retorna o novo valor de p após a partição
+
+            # Troca L[esq] e L[dir]
+            L[esq], L[dir] = L[dir], L[esq]
+
+
+    def achaPivo(self, n1, n2, L):
+        esq = n1
+        dir = n2
+        pos = esq + 1
+        pto = 0
+        
+        while True:
+            if pos > dir:
                 break
             else:
-                if A[pos] >= A[pos-1]:
-                    pos += 1
+                if L[pos] >= L[pos - 1]:
+                    pos = pos + 1
                 else:
                     pto = pos
                     break
         
+        # Retornar o ponto de inflexão encontrado
         return pto
 
+    def calcula_media(self, a, b, c):
+        return (a + b + c) // 3
+
     def median_of_medians(self, A, i):
+        while True:
+            # divide A into sublists of len 5
+            sublists = [A[j:j+5] for j in range(0, len(A), 5)]
+            
+            medians = [sorted(sublist)[len(sublist)//2] for sublist in sublists]
 
-        #divide A into sublists of len 5
-        sublists = [A[j:j+5] for j in range(0, len(A), 5)]
-        medians = [sorted(sublist)[len(sublist)//2] for sublist in sublists]
-        if len(medians) <= 5:
-            pivot = sorted(medians)[len(medians)//2]
-        else:
-            #the pivot is the median of the medians
-            pivot = self.median_of_medians(medians, len(medians)//2)
+            if not medians:
+                return A[0]  # Se não houver mais medians, retorne o primeiro elemento de A
 
-        #partitioning step
-        low = [j for j in A if j < pivot]
-        high = [j for j in A if j > pivot]
+            if len(medians) <= 5:
+                pivot = sorted(medians)[len(medians)//2]
+            else:
+                # the pivot is the median of the medians
+                pivot = self.median_of_medians(medians, len(medians)//2)
 
-        k = len(low)
-        if i < k:
-            return self.median_of_medians(low,i)
-        elif i > k:
-            return self.median_of_medians(high,i-k-1)
-        else: #pivot = k
-            return pivot
+            # partitioning step
+            low = [j for j in A if j < pivot]
+            high = [j for j in A if j > pivot]
+
+            k = len(low)
+            m = A.count(pivot)
+
+            if i < k:
+                A = low
+            elif i < k + m:
+                return pivot
+            else:
+                A = high
+                i -= k + m

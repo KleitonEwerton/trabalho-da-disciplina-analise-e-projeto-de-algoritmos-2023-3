@@ -17,7 +17,6 @@ def trocar_porcentagem(array, porcentagem):
         index_a, index_b = random.sample(range(n), 2)
         array[index_a], array[index_b] = array[index_b], array[index_a]
 
-
 def plotar_e_salvar_grafico(tempo, tamanho, titulo, nome_arquivo):
     # Verifica se as listas têm o mesmo tamanho
     if len(tempo) != len(tamanho):
@@ -45,7 +44,6 @@ def plotar_e_salvar_grafico(tempo, tamanho, titulo, nome_arquivo):
     # Salva a figura na pasta 'grafico'
     caminho_arquivo = os.path.join('grafico', nome_arquivo)
     plt.savefig(caminho_arquivo)
-
 
 tamanhos_array = [int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7), int(1e8), int(1e9)]
 porcentagens_troca = [5, 25, 45]
@@ -84,7 +82,7 @@ if __name__ == "__main__":
                 # Exibindo o resultado
                 print(
                        f"\nPivô '{metodos_pivo_nome[metodo_pivo-1]}', tamanho_array {tamanho_array}, tempo {quick_sort.time}\n\n")
-
+                # print(lista_copia)
                 tamanhos_na_iteracao.append(tamanho_array)
                 tempo_na_iteracao.append(quick_sort.time)
 
