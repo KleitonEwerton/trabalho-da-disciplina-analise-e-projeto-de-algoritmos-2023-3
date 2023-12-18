@@ -1,5 +1,5 @@
 import random
-tamanho_array = int(1e4)
+tamanho_array = int(1e5)
 
 lista_aleatoria = list(range(tamanho_array))
 antiga = lista_aleatoria.copy()
@@ -17,60 +17,103 @@ def trocar_porcentagem(array, porcentagem):
 
 trocar_porcentagem(lista_aleatoria, 50)
 
-def particao_mediana(L, n1, n2, pivo):
-    esq = n1
-    dir = n2
+def quick_sort( A, start, end):
+        if start < end:
+            # p is pivot, it is now at its correct position
+            p = partition(A, start, end)
+            quick_sort(A, start, p)  # Corrigido
+            quick_sort(A, p+1, end)
+
+def partition( A, start, end):
     
-    while True:
-        while L[esq] < pivo:
-            esq = esq + 1
-        while L[dir] > pivo:
-            dir = dir - 1
+        i = start-1  # left pointer
+        array = A[start:end]
+        pivot = find_median(array, len(array))
         
-        if esq >= dir:
-            return dir  # Retorna o novo valor de p após a partição
+        if(pivot == -1):
+            pivot = A[start]
+                    
+        j = end + 1  # right pointer
+        while True:
+            i += 1
+            while (A[i] < pivot):
+                i += 1  # move left pointer to right
+            j -= 1
+            
+            while (A[j] > pivot):
+                j -= 1  # move right pointer to left
+                
+            if i >= j:
+                return j  # stop, pivot moved to its correct position
+            
+            A[i], A[j] = A[j], A[i]
 
-        # Troca L[esq] e L[dir]
-        L[esq], L[dir] = L[dir], L[esq]
+ 
+# a, b = None, None
+ 
+def particion_mediana(arr, l, r) : 
+ 
+    lst = arr[r]; i = l; j = l; 
+    while (j < r) :
+        if (arr[j] < lst) :
+            arr[i], arr[j] = arr[j],arr[i]; 
+            i += 1; 
+         
+        j += 1; 
+ 
+    arr[i], arr[r] = arr[r],arr[i]; 
+    return i; 
 
-# Função para realizar o quicksort
-def quick_sort_mediana(L, n1, n2):
-    if n1 < n2:
-        pto = median_of_medians(L, (n1 + n2) // 2)
-        p = particao_mediana(L, n1, n2, pto)
-        quick_sort_mediana(L, n1, p) 
-        quick_sort_mediana(L, p + 1, n2)
+def random_partition_medina(arr, l, r) :
+    n = r - l + 1
+    pivot = random.randrange(1, 100) % n
+    arr[l + pivot], arr[r] = arr[r], arr[l + pivot]
+    return particion_mediana(arr, l, r); 
+ 
+def median_util(arr, l, r, 
+                k, a1, b1) : 
+ 
+    global a, b
+     
+    # if l < r
+    if (l <= r) :
+      
+        partitionIndex = random_partition_medina(arr, l, r)
+         
+        if (partitionIndex == k) :
+            b = arr[partitionIndex]
+            if (a1 != -1) :
+                return
+     
+        elif (partitionIndex == k - 1) :
+            a = arr[partitionIndex]
+            if (b1 != -1) :
+                return
+  
+        if (partitionIndex >= k) :
+            return median_util(arr, l, partitionIndex - 1, k, a, b)
+             
+        else :
+            return median_util(arr, partitionIndex + 1, r, k, a, b)
+             
+    return; 
+ 
+def find_median(arr, n) :
+    global a
+    global b
+    a = -1
+    b = -1
+     
+    if (n % 2 == 1) :
+        median_util(arr, 0, n - 1, n // 2, a, b)
+        ans = b
+         
+    else :
+        median_util(arr, 0, n - 1, n // 2, a, b)
+        ans = (a + b) // 2
+         
+    return ans
+ 
 
-def median_of_medians(A, i):
-    while True:
-        # divide A into sublists of len 5
-        sublists = [A[j:j+5] for j in range(0, len(A), 5)]
-        
-        medians = [sorted(sublist)[len(sublist)//2] for sublist in sublists]
-
-        if not medians:
-            return A[0]  # Se não houver mais medians, retorne o primeiro elemento de A
-
-        if len(medians) <= 5:
-            pivot = sorted(medians)[len(medians)//2]
-        else:
-            # the pivot is the median of the medians
-            pivot = median_of_medians(medians, len(medians)//2)
-
-        # partitioning step
-        low = [j for j in A if j < pivot]
-        high = [j for j in A if j > pivot]
-
-        k = len(low)
-        m = A.count(pivot)
-
-        if i < k:
-            A = low
-        elif i < k + m:
-            return pivot
-        else:
-            A = high
-            i -= k + m
-
-quick_sort_mediana(lista_aleatoria, 0, len(lista_aleatoria) - 1)
+quick_sort(lista_aleatoria, 0, len(lista_aleatoria) - 1)
 print(lista_aleatoria)

@@ -40,8 +40,8 @@ class QuickSort:
 
         # 5 – Pivô mediana
         elif metodo_pivo == 5:
-            p  = self.median_of_medians(A, (inicio + fim) // 2)
-            return p
+            array = A[inicio:fim]
+            return self.find_median(array, len(array))
             
 
     # Function to perform quicksort
@@ -67,7 +67,8 @@ class QuickSort:
     def partition(self, A, start, end, metodo_pivo):
         i = start-1  # left pointer
         
-        pivot = self.seleciona_pivo(A, start, end, metodo_pivo)
+        array = A[start:end]
+        pivot = self.find_median(array, len(array))
         
         j = end + 1  # right pointer
         while True:
@@ -123,33 +124,65 @@ class QuickSort:
     def calcula_media(self, a, b, c):
         return (a + b + c) // 3
 
-    def median_of_medians(self, A, i):
-        while True:
-            # divide A into sublists of len 5
-            sublists = [A[j:j+5] for j in range(0, len(A), 5)]
+    def particion_mediana(self, arr, l, r) : 
+ 
+        lst = arr[r]; i = l; j = l; 
+        while (j < r) :
+            if (arr[j] < lst) :
+                arr[i], arr[j] = arr[j],arr[i]; 
+                i += 1; 
             
-            medians = [sorted(sublist)[len(sublist)//2] for sublist in sublists]
+            j += 1; 
+    
+        arr[i], arr[r] = arr[r],arr[i]; 
+        return i; 
 
-            if not medians:
-                return A[0]  # Se não houver mais medians, retorne o primeiro elemento de A
-
-            if len(medians) <= 5:
-                pivot = sorted(medians)[len(medians)//2]
-            else:
-                # the pivot is the median of the medians
-                pivot = self.median_of_medians(medians, len(medians)//2)
-
-            # partitioning step
-            low = [j for j in A if j < pivot]
-            high = [j for j in A if j > pivot]
-
-            k = len(low)
-            m = A.count(pivot)
-
-            if i < k:
-                A = low
-            elif i < k + m:
-                return pivot
-            else:
-                A = high
-                i -= k + m
+    def random_partition_medina(self, arr, l, r) :
+        n = r - l + 1
+        pivot = random.randrange(1, 100) % n
+        arr[l + pivot], arr[r] = arr[r], arr[l + pivot]
+        return self.particion_mediana(arr, l, r); 
+    
+    def median_util(self, arr, l, r, 
+                    k, a1, b1) : 
+    
+        global a, b
+        
+        # if l < r
+        if (l <= r) :
+        
+            partitionIndex = self.random_partition_medina(arr, l, r)
+            
+            if (partitionIndex == k) :
+                b = arr[partitionIndex]
+                if (a1 != -1) :
+                    return
+        
+            elif (partitionIndex == k - 1) :
+                a = arr[partitionIndex]
+                if (b1 != -1) :
+                    return
+    
+            if (partitionIndex >= k) :
+                return self.median_util(arr, l, partitionIndex - 1, k, a, b)
+                
+            else :
+                return self.median_util(arr, partitionIndex + 1, r, k, a, b)
+                
+        return; 
+    
+    def find_median(self, arr, n) :
+        global a
+        global b
+        a = -1
+        b = -1
+        
+        if (n % 2 == 1) :
+            self.median_util(arr, 0, n - 1, n // 2, a, b)
+            ans = b
+            
+        else :
+            self.median_util(arr, 0, n - 1, n // 2, a, b)
+            ans = (a + b) // 2
+            
+        return ans
