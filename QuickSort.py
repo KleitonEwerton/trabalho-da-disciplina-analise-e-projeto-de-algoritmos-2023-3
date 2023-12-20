@@ -58,7 +58,7 @@ class QuickSort:
         
         pto = self.achaPivo(n1, n2, L)
         
-        if pto != 0:
+        if pto != -1:
             p = self.particao_acha_pivo(L, n1, n2, L[pto], pto)
             self.quick_sort_acha_pivo(L, esq, p) 
             self.quick_sort_acha_pivo(L, p + 1, dir)
@@ -90,7 +90,7 @@ class QuickSort:
         dir = n2
         
         while True:
-            while L[esq] < pivo:
+            while L[esq] <= pivo:
                 esq = esq + 1
             while L[dir] > pivo:
                 dir = dir - 1
@@ -106,7 +106,7 @@ class QuickSort:
         esq = n1
         dir = n2
         pos = esq + 1
-        pto = 0
+        pto = -1
         
         while True:
             if pos > dir:
