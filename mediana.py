@@ -115,5 +115,3 @@ def find_median(arr, n) :
     return ans
  
 
-quick_sort(lista_aleatoria, 0, len(lista_aleatoria) - 1)
-print(lista_aleatoria)
