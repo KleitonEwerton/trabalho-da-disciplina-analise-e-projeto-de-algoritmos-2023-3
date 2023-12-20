@@ -4,18 +4,17 @@ from util import plotar_e_salvar_grafico
 
 quantidade_iteracoes = 10
 
-tamanhos_array = [int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7)]
+tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7)]
 
-porcentagens_troca = [45, 25, 5]
+porcentagens_troca = [5, 25, 45]
 
-metodos_pivo = [1, 2, 3, 4, 6, 5]
+metodos_pivo = [1, 2, 3, 4, 5, 6]
 
 metodos_pivo_nome = ["Primeiro", "Central",
                      "Média", "Randômico", "Mediana", "Acha Pivo"]
 
 if __name__ == "__main__":
 
-    # Criando uma lista aleatória para ordenar
     for metodo_pivo in metodos_pivo:
         for porcentagem_troca in porcentagens_troca:
 
@@ -25,9 +24,11 @@ if __name__ == "__main__":
 
             for tamanho_array in tamanhos_array:
                 
+                # Tempo total de execução de todas as iterações para um tamanho de array, metodo de escolha de pivô e porcentagem de troca
                 tempo = 0
                 
                 for iteracao in range(quantidade_iteracoes):
+                    
                     # Criando uma lista aleatória para ordenar
                     lista_aleatoria = list(range(tamanho_array))
 
@@ -51,7 +52,7 @@ if __name__ == "__main__":
                     # Lista anterior
                     # print("Lista Desordenada: ", lista_aleatoria)
                     
-                    # # Exibindo o resultado
+                    # Exibindo o resultado
                     # print("\nLista Ordenada", lista_ordenada)
                     
                 tamanhos_na_iteracao.append(tamanho_array)
@@ -60,5 +61,6 @@ if __name__ == "__main__":
             print(f"\nTítulo:\n {titulo}",
                   f"\nTamanhos na iteracao:\n {tamanhos_na_iteracao}",
                   f"\nTempos na iteracao:\n {tempo_na_iteracao}")
+            
             plotar_e_salvar_grafico(
                 tempo_na_iteracao, tamanhos_na_iteracao, titulo, f"grafico_{titulo}.png")
