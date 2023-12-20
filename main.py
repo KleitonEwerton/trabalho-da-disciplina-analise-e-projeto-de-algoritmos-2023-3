@@ -5,6 +5,7 @@ from util import plotar_e_salvar_grafico
 quantidade_iteracoes = 10
 
 tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7)]
+# tamanhos_array = [10, 20, 30, 40, 50]
 
 porcentagens_troca = [5, 25, 45]
 

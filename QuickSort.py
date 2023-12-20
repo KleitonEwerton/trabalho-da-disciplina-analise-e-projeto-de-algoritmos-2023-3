@@ -68,7 +68,7 @@ class QuickSort:
         i = start-1  # left pointer
         
         array = A[start:end]
-        pivot = self.find_median(array, len(array))
+        pivot = self.seleciona_pivo(A, start, end, metodo_pivo)
         
         j = end + 1  # right pointer
         while True:
