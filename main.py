@@ -1,23 +1,26 @@
+import random
 from QuickSort import QuickSort
-from mediana import trocar_porcentagem
-from util import plotar_e_salvar_grafico
+from util import plotar_e_salvar_grafico, trocar_porcentagem
 
 quantidade_iteracoes = 10
 
 tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7)]
-tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5)]
-# tamanhos_array = [10, 20, 30, 40, 50]
+# tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5)]
+# tamanhos_array = [20, 30, 40, 50, 60]
 
 porcentagens_troca = [5, 25, 45]
 
-metodos_pivo = [1, 2, 3, 4, 5, 6]
+metodos_pivo = [1, 2, 3, 4, 6, 5]
 
 metodos_pivo_nome = ["Primeiro", "Central",
                      "Média", "Randômico", "Mediana", "Acha Pivo"]
 
+# funcao que retorna uma lista ordenada de tamanho n, com elementos aleatorios sorteados de 0 a n
+
 if __name__ == "__main__":
 
     for metodo_pivo in metodos_pivo:
+        
         for porcentagem_troca in porcentagens_troca:
 
             tamanhos_na_iteracao = []
@@ -31,9 +34,12 @@ if __name__ == "__main__":
                 
                 for iteracao in range(quantidade_iteracoes):
                     
-                    # Criando uma lista aleatória para ordenar
+                    # Criando uma lista aleatória para ordenar (0, 1, 2, 3, ...,  n -2, n -1) ordenada (rapido)
                     lista_aleatoria = list(range(tamanho_array))
-
+                    
+                    # Criando uma lista aleatória para ordenar (0 - n randomicos) ordenada (lento)
+                    # lista_aleatoria = lista_aleatoria_array(tamanho_array)
+                    
                     # Embaralhando a lista aleatória
                     trocar_porcentagem(lista_aleatoria, porcentagem_troca)
                     
@@ -49,13 +55,13 @@ if __name__ == "__main__":
                     tempo += quick_sort.time
                     
                     print(
-                        f"\n\nIteração {iteracao}, Pivô '{metodos_pivo_nome[metodo_pivo-1]}', tamanho_array {tamanho_array}, tempo {quick_sort.time}, porcentagem_troca {porcentagem_troca}%\n")
+                        f"\n\nIteração {iteracao + 1}, Pivô '{metodos_pivo_nome[metodo_pivo-1]}', tamanho_array {tamanho_array}, tempo {quick_sort.time}, porcentagem_troca {porcentagem_troca}%\n")
                     
                     # Lista anterior
-                    # print("Lista Desordenada: ", lista_aleatoria)
+                    print("Lista Desordenada: ", lista_aleatoria)
                     
                     # Exibindo o resultado
-                    # print("\nLista Ordenada", lista_ordenada)
+                    print("\nLista Ordenada", lista_ordenada)
                     
                 tamanhos_na_iteracao.append(tamanho_array)
                 tempo_na_iteracao.append(tempo/quantidade_iteracoes)

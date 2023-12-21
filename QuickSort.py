@@ -1,6 +1,10 @@
 import random
 import time
 
+import numpy as np
+
+from util import calcularMedia
+
 
 class QuickSort:
     def __init__(self, lista):
@@ -9,12 +13,10 @@ class QuickSort:
     def ordenar(self, array, metodo_pivo):
         tempo_inicio = time.time()
 
-        if(metodo_pivo == 6):
-            self.quick_sort_acha_pivo(array, 0, len(array) - 1)
-        else:
-            self.quick_sort(array, 0, len(array) - 1, metodo_pivo)
+        self.quickSort(array, 0, len(array) - 1, metodo_pivo)
 
         tempo_fim = time.time()
+        
         self.time = tempo_fim - tempo_inicio
 
     def seleciona_pivo(self, A, inicio, fim, metodo_pivo):
@@ -41,90 +43,78 @@ class QuickSort:
         # 5 – Pivô mediana
         elif metodo_pivo == 5:
             array = A[inicio:fim]
-            return self.find_median(array, len(array))
-            
-
-    # Function to perform quicksort
-    def quick_sort(self, A, start, end, metodo_pivo):
-        if start < end:
-            # p is pivot, it is now at its correct position
-            p = self.partition(A, start, end, metodo_pivo)
-            self.quick_sort(A, start, p, metodo_pivo)  # Corrigido
-            self.quick_sort(A, p+1, end, metodo_pivo)
-
-    def quick_sort_acha_pivo(self,L, n1, n2):
-        esq = n1
-        dir = n2
+            return self.buscaMediana(array, len(array))
         
-        pto = self.achaPivo(n1, n2, L)
-        
-        if pto != -1:
-            p = self.particao_acha_pivo(L, n1, n2, L[pto], pto)
-            self.quick_sort_acha_pivo(L, esq, p) 
-            self.quick_sort_acha_pivo(L, p + 1, dir)
+        # 6 – Pivô (Acha pivot)
+        elif metodo_pivo == 6:
+            return self.achaPivo(inicio, fim, A) 
 
+    def quickSort(self, array, low, high, pivot_type):
+        if low >= high:
+            return
 
-    def partition(self, A, start, end, metodo_pivo):
-        i = start-1  # left pointer
+        p = self.selecionaPivo(array, low, high, pivot_type)
+
+        if p is None:
+            return
+
+        i = low
+        j = high
+
+        while i <= j:
+            while array[i] < p:
+                i += 1
+
+            while array[j] > p:
+                j -= 1
+
+            if i <= j:
+                array[i], array[j] = array[j], array[i]
+                i += 1
+                j -= 1
+
+        if low < j:
+            self.quickSort(array, low, j, pivot_type)
+
+        if i < high:
+            self.quickSort(array, i, high, pivot_type)
+
+    def selecionaPivo(self, arr, low, high, pivot_type):
         
-        array = A[start:end]
-        pivot = self.seleciona_pivo(A, start, end, metodo_pivo)
-        
-        j = end + 1  # right pointer
+        if pivot_type == 1:
+            return arr[low]
+
+        if pivot_type == 2:
+            return arr[(high + low)//2]
+
+        if pivot_type == 3:
+            return calcularMedia(arr, low, high)
+
+        if pivot_type == 4:
+            return arr[np.random.randint(low, high+1)]
+
+        if pivot_type == 5:
+            array = arr[low:high]
+            return self.buscaMediana( array, len( array))
+
+        if pivot_type == 6:
+            return self.achaPivo(arr, low, high)
+
+    def achaPivo(self, L, n1, n2):
+        pos = n1 + 1
+        pivo = None
         while True:
-            i += 1
-            while (A[i] < pivot):
-                i += 1  # move left pointer to right
-            j -= 1
-            
-            while (A[j] > pivot):
-                j -= 1  # move right pointer to left
-                
-            if i >= j:
-                return j  # stop, pivot moved to its correct position
-            
-            A[i], A[j] = A[j], A[i]
-    
-    def particao_acha_pivo(self, L, n1, n2, pivo, p):
-        esq = n1
-        dir = n2
-        
-        while True:
-            while L[esq] <= pivo:
-                esq = esq + 1
-            while L[dir] > pivo:
-                dir = dir - 1
-            
-            if esq >= dir:
-                return dir  # Retorna o novo valor de p após a partição
-
-            # Troca L[esq] e L[dir]
-            L[esq], L[dir] = L[dir], L[esq]
-
-
-    def achaPivo(self, n1, n2, L):
-        esq = n1
-        dir = n2
-        pos = esq + 1
-        pto = -1
-        
-        while True:
-            if pos > dir:
+            if pos > n2:
                 break
+            elif L[pos] >= L[pos-1]:
+                pos += 1
             else:
-                if L[pos] >= L[pos - 1]:
-                    pos = pos + 1
-                else:
-                    pto = pos
-                    break
-        
-        # Retornar o ponto de inflexão encontrado
-        return pto
+                pivo = pos-1
+                break
 
-    def calcula_media(self, a, b, c):
-        return (a + b + c) // 3
+        return L[pivo] if pivo is not None else pivo
 
-    def particion_mediana(self, arr, l, r) : 
+    def particaoMediana(self, arr, l, r) : 
  
         lst = arr[r]; i = l; j = l; 
         while (j < r) :
@@ -137,13 +127,13 @@ class QuickSort:
         arr[i], arr[r] = arr[r],arr[i]; 
         return i; 
 
-    def random_partition_medina(self, arr, l, r) :
+    def particaoAleatorioMediana(self, arr, l, r) :
         n = r - l + 1
         pivot = random.randrange(1, 100) % n
         arr[l + pivot], arr[r] = arr[r], arr[l + pivot]
-        return self.particion_mediana(arr, l, r); 
+        return self.particaoMediana(arr, l, r); 
     
-    def median_util(self, arr, l, r, 
+    def utilMediana(self, arr, l, r, 
                     k, a1, b1) : 
     
         global a, b
@@ -151,7 +141,7 @@ class QuickSort:
         # if l < r
         if (l <= r) :
         
-            partitionIndex = self.random_partition_medina(arr, l, r)
+            partitionIndex = self.particaoAleatorioMediana(arr, l, r)
             
             if (partitionIndex == k) :
                 b = arr[partitionIndex]
@@ -164,25 +154,25 @@ class QuickSort:
                     return
     
             if (partitionIndex >= k) :
-                return self.median_util(arr, l, partitionIndex - 1, k, a, b)
+                return self.utilMediana(arr, l, partitionIndex - 1, k, a, b)
                 
             else :
-                return self.median_util(arr, partitionIndex + 1, r, k, a, b)
+                return self.utilMediana(arr, partitionIndex + 1, r, k, a, b)
                 
         return; 
     
-    def find_median(self, arr, n) :
+    def buscaMediana(self, arr, n) :
         global a
         global b
         a = -1
         b = -1
         
         if (n % 2 == 1) :
-            self.median_util(arr, 0, n - 1, n // 2, a, b)
+            self.utilMediana(arr, 0, n - 1, n // 2, a, b)
             ans = b
             
         else :
-            self.median_util(arr, 0, n - 1, n // 2, a, b)
+            self.utilMediana(arr, 0, n - 1, n // 2, a, b)
             ans = (a + b) // 2
             
         return ans

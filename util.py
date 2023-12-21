@@ -3,6 +3,14 @@ import random
 import os
 import matplotlib.pyplot as plt
 
+def lista_aleatoria_array(n):
+    lista = list()
+    for _ in range(n):
+        lista.append(random.randint(0, n))
+    
+    lista.sort()
+    return lista
+
 def trocar_porcentagem(array, porcentagem):
     if porcentagem < 0 or porcentagem > 100:
         raise ValueError("A porcentagem deve estar entre 0 e 100.")
@@ -41,3 +49,6 @@ def plotar_e_salvar_grafico(tempo, tamanho, titulo, nome_arquivo):
     # Salva a figura na pasta 'grafico'
     caminho_arquivo = os.path.join('grafico', nome_arquivo)
     plt.savefig(caminho_arquivo)
+
+def calcularMedia(arr, low, high):    
+    return (arr[high] +  arr[(high + low) // 2] + arr[low]) // 3
