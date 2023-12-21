@@ -11,12 +11,16 @@ class QuickSort:
         self.time = 0
 
     def ordenar(self, array, metodo_pivo):
+        # Inicia o contador de tempo
         tempo_inicio = time.time()
 
+        # Ordena o array
         self.quickSort(array, 0, len(array) - 1, metodo_pivo)
 
+        # Finaliza o contador de tempo
         tempo_fim = time.time()
         
+        # Calcula o tempo de execução
         self.time = tempo_fim - tempo_inicio
 
     def seleciona_pivo(self, A, inicio, fim, metodo_pivo):
@@ -53,6 +57,7 @@ class QuickSort:
         if low >= high:
             return
 
+        # Seleciona o pivô de acordo com o método escolhido
         p = self.selecionaPivo(array, low, high, pivot_type)
 
         if p is None:
@@ -138,26 +143,25 @@ class QuickSort:
     
         global a, b
         
-        # if l < r
         if (l <= r) :
         
-            partitionIndex = self.particaoAleatorioMediana(arr, l, r)
+            indexDaParticao = self.particaoAleatorioMediana(arr, l, r)
             
-            if (partitionIndex == k) :
-                b = arr[partitionIndex]
+            if (indexDaParticao == k) :
+                b = arr[indexDaParticao]
                 if (a1 != -1) :
                     return
         
-            elif (partitionIndex == k - 1) :
-                a = arr[partitionIndex]
+            elif (indexDaParticao == k - 1) :
+                a = arr[indexDaParticao]
                 if (b1 != -1) :
                     return
     
-            if (partitionIndex >= k) :
-                return self.utilMediana(arr, l, partitionIndex - 1, k, a, b)
+            if (indexDaParticao >= k) :
+                return self.utilMediana(arr, l, indexDaParticao - 1, k, a, b)
                 
             else :
-                return self.utilMediana(arr, partitionIndex + 1, r, k, a, b)
+                return self.utilMediana(arr, indexDaParticao + 1, r, k, a, b)
                 
         return; 
     

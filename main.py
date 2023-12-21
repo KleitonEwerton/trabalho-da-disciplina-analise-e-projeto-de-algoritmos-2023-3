@@ -58,10 +58,10 @@ if __name__ == "__main__":
                         f"\n\nIteração {iteracao + 1}, Pivô '{metodos_pivo_nome[metodo_pivo-1]}', tamanho_array {tamanho_array}, tempo {quick_sort.time}, porcentagem_troca {porcentagem_troca}%\n")
                     
                     # Lista anterior
-                    print("Lista Desordenada: ", lista_aleatoria)
+                    # print("Lista Desordenada: ", lista_aleatoria)
                     
                     # Exibindo o resultado
-                    print("\nLista Ordenada", lista_ordenada)
+                    # print("\nLista Ordenada", lista_ordenada)
                     
                 tamanhos_na_iteracao.append(tamanho_array)
                 tempo_na_iteracao.append(tempo/quantidade_iteracoes)
