@@ -12,13 +12,13 @@ class QuickSort:
 
     def ordenar(self, array, metodo_pivo):
         # Inicia o contador de tempo
-        tempo_inicio = time.time()
+        tempo_inicio = time.perf_counter()
 
         # Ordena o array
         self.quickSort(array, 0, len(array) - 1, metodo_pivo)
 
         # Finaliza o contador de tempo
-        tempo_fim = time.time()
+        tempo_fim = time.perf_counter()
         
         # Calcula o tempo de execução
         self.time = tempo_fim - tempo_inicio
