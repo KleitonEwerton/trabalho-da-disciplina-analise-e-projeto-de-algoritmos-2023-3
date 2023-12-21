@@ -1,16 +1,16 @@
 import random
 from QuickSort import QuickSort
-from util import plotar_e_salvar_grafico, trocar_porcentagem
+from util import lista_aleatoria_array, plotar_e_salvar_grafico, trocar_porcentagem
 
 quantidade_iteracoes = 10
 
-tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7)]
-# tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5)]
+# tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5), int(1e6), int(1e7)]
+tamanhos_array = [int(1e1) , int(1e2), int(1e3), int(1e4), int(1e5)]
 # tamanhos_array = [20, 30, 40, 50, 60]
 
 porcentagens_troca = [5, 25, 45]
 
-metodos_pivo = [1, 2, 3, 4, 6, 5]
+metodos_pivo = [1,2,3,4,5,6]
 
 metodos_pivo_nome = ["Primeiro", "Central",
                      "Média", "Randômico", "Mediana", "Acha Pivo"]
@@ -38,7 +38,7 @@ if __name__ == "__main__":
                     lista_aleatoria = list(range(tamanho_array))
                     
                     # Criando uma lista aleatória para ordenar (0 - n randomicos) ordenada (lento)
-                    # lista_aleatoria = lista_aleatoria_array(tamanho_array)
+                    # lista_aleatoria = lista_aleatoria_array(20)
                     
                     # Embaralhando a lista aleatória
                     trocar_porcentagem(lista_aleatoria, porcentagem_troca)

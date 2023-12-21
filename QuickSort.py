@@ -53,18 +53,18 @@ class QuickSort:
         elif metodo_pivo == 6:
             return self.achaPivo(inicio, fim, A) 
 
-    def quickSort(self, array, low, high, pivot_type):
-        if low >= high:
+    def quickSort(self, array, inicio, fim, tipo_pivo):
+        if inicio >= fim:
             return
 
         # Seleciona o pivô de acordo com o método escolhido
-        p = self.selecionaPivo(array, low, high, pivot_type)
+        p = self.selecionaPivo(array, inicio, fim, tipo_pivo)
 
         if p is None:
             return
 
-        i = low
-        j = high
+        i = inicio
+        j = fim
 
         while i <= j:
             while array[i] < p:
@@ -78,32 +78,32 @@ class QuickSort:
                 i += 1
                 j -= 1
 
-        if low < j:
-            self.quickSort(array, low, j, pivot_type)
+        if inicio < j:
+            self.quickSort(array, inicio, j, tipo_pivo)
 
-        if i < high:
-            self.quickSort(array, i, high, pivot_type)
+        if i < fim:
+            self.quickSort(array, i, fim, tipo_pivo)
 
-    def selecionaPivo(self, arr, low, high, pivot_type):
+    def selecionaPivo(self, arr, inicio, fim, tipo_pivo):
         
-        if pivot_type == 1:
-            return arr[low]
+        if tipo_pivo == 1:
+            return arr[inicio]
 
-        if pivot_type == 2:
-            return arr[(high + low)//2]
+        if tipo_pivo == 2:
+            return arr[(fim + inicio)//2]
 
-        if pivot_type == 3:
-            return calcularMedia(arr, low, high)
+        if tipo_pivo == 3:
+            return calcularMedia(arr, inicio, fim)
 
-        if pivot_type == 4:
-            return arr[np.random.randint(low, high+1)]
+        if tipo_pivo == 4:
+            return arr[np.random.randint(inicio, fim+1)]
 
-        if pivot_type == 5:
-            array = arr[low:high]
-            return self.buscaMediana( array, len( array))
+        if tipo_pivo == 5:
+            array = arr[inicio:fim]
+            return self.mediana(array)
 
-        if pivot_type == 6:
-            return self.achaPivo(arr, low, high)
+        if tipo_pivo == 6:
+            return self.achaPivo(arr, inicio, fim)
 
     def achaPivo(self, L, n1, n2):
         pos = n1 + 1
@@ -117,66 +117,53 @@ class QuickSort:
                 pivo = pos-1
                 break
 
-        return L[pivo] if pivo is not None else pivo
+        if pivo is not None:
+            return L[pivo]
+        else:
+            return pivo
 
-    def particaoMediana(self, arr, l, r) : 
- 
-        lst = arr[r]; i = l; j = l; 
-        while (j < r) :
-            if (arr[j] < lst) :
-                arr[i], arr[j] = arr[j],arr[i]; 
-                i += 1; 
-            
-            j += 1; 
-    
-        arr[i], arr[r] = arr[r],arr[i]; 
-        return i; 
+    def partitionMediana(self, arr, left, right, pivot):
+        pivot_value = arr[pivot]
+        arr[pivot], arr[right] = arr[right], arr[pivot]
+        store_index = left
 
-    def particaoAleatorioMediana(self, arr, l, r) :
-        n = r - l + 1
-        pivot = random.randrange(1, 100) % n
-        arr[l + pivot], arr[r] = arr[r], arr[l + pivot]
-        return self.particaoMediana(arr, l, r); 
+        for i in range(left, right):
+            if arr[i] < pivot_value:
+                arr[i], arr[store_index] = arr[store_index], arr[i]
+                store_index += 1
+
+        arr[store_index], arr[right] = arr[right], arr[store_index]
+        return store_index
+
+
+    def quickselectMediana(self, arr, left, right, k):
+        if left == right:
+            return arr[left]
+
+        pivot = (right + left) // 2
+        new_pivot_index = self.partitionMediana(arr, left, right, pivot)
+        diff = new_pivot_index - left
+
+        if diff == k:
+            return arr[new_pivot_index]
+        elif k < diff:
+            return self.quickselectMediana(arr, left, new_pivot_index - 1, k)
+        else:
+            return self.quickselectMediana(arr, new_pivot_index + 1, right, k - diff - 1)
+
+
+    def mediana(self, arr):
+        if not arr:
+            return None
+
+        length = len(arr)
+
+        if length % 2 == 1:
+            return self.quickselectMediana(arr, 0, length - 1, length // 2)
+        else:
+            inicioer = self.quickselectMediana(arr, 0, length - 1, length // 2 - 1)
+            fimer = self.quickselectMediana(arr, 0, length - 1, length // 2)
+            return (inicioer + fimer) / 2.0
+
+
     
-    def utilMediana(self, arr, l, r, 
-                    k, a1, b1) : 
-    
-        global a, b
-        
-        if (l <= r) :
-        
-            indexDaParticao = self.particaoAleatorioMediana(arr, l, r)
-            
-            if (indexDaParticao == k) :
-                b = arr[indexDaParticao]
-                if (a1 != -1) :
-                    return
-        
-            elif (indexDaParticao == k - 1) :
-                a = arr[indexDaParticao]
-                if (b1 != -1) :
-                    return
-    
-            if (indexDaParticao >= k) :
-                return self.utilMediana(arr, l, indexDaParticao - 1, k, a, b)
-                
-            else :
-                return self.utilMediana(arr, indexDaParticao + 1, r, k, a, b)
-                
-        return; 
-    
-    def buscaMediana(self, arr, n) :
-        global a
-        global b
-        a = -1
-        b = -1
-        
-        if (n % 2 == 1) :
-            self.utilMediana(arr, 0, n - 1, n // 2, a, b)
-            ans = b
-            
-        else :
-            self.utilMediana(arr, 0, n - 1, n // 2, a, b)
-            ans = (a + b) // 2
-            
-        return ans
